@@ -1,7 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/process_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    android:background="@drawable/bg_img"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/processType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/non_preemptive"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:background="@drawable/btn1_bg"
+            android:clickable="true"
+            android:text="Non-Preemptive"
+            android:textColor="@color/white"
+            android:textSize="13.5sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/preemptive"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:background="@drawable/btn2_bg"
+            android:clickable="true"
+            android:text="Preemptive"
+            android:textColor="@color/white"
+            android:textSize="13.5sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/algoName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/processType">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="215dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/edittext_bg"
+            android:entries="@array/dropdown_items"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+        </Spinner>
+
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Time Quantum"
+            android:inputType="number"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18dp">
+        </EditText>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="Add a Process"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/algoName">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/pDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <EditText
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Process ID"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18dp">
+        </EditText>
+
+        <EditText
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Arrival Time"
+            android:inputType="number"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18dp">
+        </EditText>
+
+        <EditText
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Burst Time"
+            android:inputType="number"
+            android:padding="12dp"
+            android:textColor="#707070"
+            android:textSize="18dp">
+        </EditText>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addProcess"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginVertical="15dp"
+        android:text="Add Process"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pDetails">
+    </Button>
+
+    <!--   Table -->
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintTop_toBottomOf="@id/addProcess"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_blue">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Process ID"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Arrival Time"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Burst Time"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold">
+            </TextView>
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:text="❌"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="deleteRow" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="12345"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp">
+            </TextView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp">
+            </TextView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="20"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp">
+            </TextView>
+        </TableRow>
+
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
