@@ -30,6 +30,7 @@ public class Process extends AppCompatActivity {
     private EditText pid;
     private EditText arrivalTime;
     private EditText burstTime;
+    private EditText priority;
     private Spinner algorithm;
 
     int rowID=0;
@@ -48,6 +49,7 @@ public class Process extends AppCompatActivity {
         pid = findViewById(R.id.pid);
         arrivalTime = findViewById(R.id.arrivalTime);
         burstTime = findViewById(R.id.burstTime);
+        priority = findViewById(R.id.priority);
         algorithm = findViewById(R.id.algorithm);
 
         // Find the "Add Process" button by its ID
@@ -85,78 +87,95 @@ public class Process extends AppCompatActivity {
 
     // Method to handle adding a new process
     private void addProcess() {
-        rowID++;
         // Get the text entered by the user in the EditText fields
         String cross = "❌";
         String processID = pid.getText().toString();
-        String arrivalT = arrivalTime.getText().toString();
-        String burstT = burstTime.getText().toString();
+        double arrivalT = Double.parseDouble(arrivalTime.getText().toString());
+        double burstT = Double.parseDouble(burstTime.getText().toString());
+        int priorityy = 0;
+        if(!(priority.getText().toString().isEmpty()))
+            priorityy = Integer.parseInt(priority.getText().toString());
 
-        // Create a new row for the table
-        TableRow newRow = new TableRow(this);
-        newRow.setId(rowID);
+        if (!processID.isEmpty() && !(arrivalTime.getText().toString().isEmpty()) && !(burstTime.getText().toString().isEmpty())) {
+            // Create a new row for the table
+            rowID++;
+            TableRow newRow = new TableRow(this);
+            newRow.setId(rowID);
 
-        TableRow.LayoutParams params = new TableRow.LayoutParams();
-        params.weight = .4f;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.weight = .4f;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-        // Delete
-        TextView delete = (new TextView(this));
-        delete.setText(cross);
-        delete.setGravity(Gravity.CENTER);
-        delete.setLayoutParams(params);
-        delete.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        delete.setId(rowID+10);
-        delete.setClickable(true);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteRow((int)v.getId()-10);
-            }
-        });
+            // Delete
+            TextView delete = (new TextView(this));
+            delete.setText(cross);
+            delete.setGravity(Gravity.CENTER);
+            delete.setLayoutParams(params);
+            delete.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            delete.setId(rowID + 10);
+            delete.setClickable(true);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteRow((int) v.getId() - 10);
+                }
+            });
 
-        params = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.weight = 1f;
+            params = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.weight = 1f;
 
-        // processID
-        TextView pidTextView = new TextView(this);
-        pidTextView.setText(processID);
-        pidTextView.setGravity(Gravity.CENTER);
-        pidTextView.setLayoutParams(params);
-        pidTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        pidTextView.setTextColor(getResources().getColor(R.color.white));
-        pidTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        pidTextView.setTypeface(null, Typeface.BOLD);
+            // processID
+            TextView pidTextView = new TextView(this);
+            pidTextView.setText(processID);
+            pidTextView.setGravity(Gravity.CENTER);
+            pidTextView.setLayoutParams(params);
+            pidTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            pidTextView.setTextColor(getResources().getColor(R.color.white));
+            pidTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            pidTextView.setTypeface(null, Typeface.BOLD);
 
-        // arrival Time
-        TextView arrivalTimeTextView = new TextView(this);
-        arrivalTimeTextView.setText(arrivalT);
-        arrivalTimeTextView.setGravity(Gravity.CENTER);
-        arrivalTimeTextView.setLayoutParams(params);
-        arrivalTimeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        arrivalTimeTextView.setTextColor(getResources().getColor(R.color.white));
-        arrivalTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        arrivalTimeTextView.setTypeface(null, Typeface.BOLD);
+            // arrival Time
+            TextView arrivalTimeTextView = new TextView(this);
+            arrivalTimeTextView.setText(String.valueOf(arrivalT));
+            arrivalTimeTextView.setGravity(Gravity.CENTER);
+            arrivalTimeTextView.setLayoutParams(params);
+            arrivalTimeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            arrivalTimeTextView.setTextColor(getResources().getColor(R.color.white));
+            arrivalTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            arrivalTimeTextView.setTypeface(null, Typeface.BOLD);
 
-        // Burst Time
-        TextView burstTimeTextView = new TextView(this);
-        burstTimeTextView.setText(burstT);
-        burstTimeTextView.setGravity(Gravity.CENTER);
-        burstTimeTextView.setLayoutParams(params);
-        burstTimeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        burstTimeTextView.setTextColor(getResources().getColor(R.color.white));
-        burstTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        burstTimeTextView.setTypeface(null, Typeface.BOLD);
+            // Burst Time
+            TextView burstTimeTextView = new TextView(this);
+            burstTimeTextView.setText(String.valueOf(burstT));
+            burstTimeTextView.setGravity(Gravity.CENTER);
+            burstTimeTextView.setLayoutParams(params);
+            burstTimeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            burstTimeTextView.setTextColor(getResources().getColor(R.color.white));
+            burstTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            burstTimeTextView.setTypeface(null, Typeface.BOLD);
 
-        // Add TextViews to the new row
-        newRow.addView(delete);
-        newRow.addView(pidTextView);
-        newRow.addView(arrivalTimeTextView);
-        newRow.addView(burstTimeTextView);
+            // priority
+            TextView priorityTextView = new TextView(this);
+            priorityTextView.setText(String.valueOf(priorityy));
+//            Log.d("priorityy = "+priorityy, ""+String.valueOf(priorityy));
+            priorityTextView.setGravity(Gravity.CENTER);
+            priorityTextView.setLayoutParams(params);
+            priorityTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            priorityTextView.setTextColor(getResources().getColor(R.color.white));
+            priorityTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            priorityTextView.setTypeface(null, Typeface.BOLD);
 
-        // Add the new row to the table layout
-        TableLayout tableLayout = findViewById(R.id.tableLayout);
-        tableLayout.addView(newRow);
+            // Add TextViews to the new row
+            newRow.addView(delete);
+            newRow.addView(pidTextView);
+            newRow.addView(arrivalTimeTextView);
+            newRow.addView(burstTimeTextView);
+            newRow.addView(priorityTextView);
+
+            // Add the new row to the table layout
+            TableLayout tableLayout = findViewById(R.id.tableLayout);
+            tableLayout.addView(newRow);
+        }
     }
 
 }
