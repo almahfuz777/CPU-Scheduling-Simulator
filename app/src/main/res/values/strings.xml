@@ -3,5 +3,5 @@
     <string name="title">CPU\nProcess Scheduling\nSimulator</string>
     <string name="cse323">CSE323</string>
     <string name="btn">Get Started</string>
-    <string name="get_started">Get Started</string>
+    <string name="get_started">Get Started  ➡</string>
 </resources>

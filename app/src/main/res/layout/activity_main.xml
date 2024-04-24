@@ -42,33 +42,17 @@
             android:textSize="30.5sp"
             android:textStyle="bold" />
 
-        <RelativeLayout
+        <Button
+            android:id="@+id/getStarted"
             android:layout_width="150dp"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/getStarted"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="#03A9F4"
-                android:gravity="start|center_vertical"
-                android:text="@string/get_started"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="14dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="Arrow"
-                app:srcCompat="@drawable/baseline_arrow_forward_24" />
-        </RelativeLayout>
-
+            android:layout_height="50dp"
+            android:background="#03A9F4"
+            android:padding="10dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/get_started"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

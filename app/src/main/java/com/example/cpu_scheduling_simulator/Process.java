@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textview.MaterialTextView;
 
@@ -27,13 +28,14 @@ import org.w3c.dom.Text;
 
 
 public class Process extends AppCompatActivity {
+    // an instance variable for ProcessData
+    private ProcessData processData;
+    //
     private EditText pid;
     private EditText arrivalTime;
     private EditText burstTime;
     private EditText priority;
-    private Spinner algorithm;
-
-    int rowID=0;
+    private Spinner spinner;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +47,15 @@ public class Process extends AppCompatActivity {
             return insets;
         });
 
+        // Initializing the ProcessData instance
+        processData = new ProcessData();
+
         // Collect User Inputs
         pid = findViewById(R.id.pid);
         arrivalTime = findViewById(R.id.arrivalTime);
         burstTime = findViewById(R.id.burstTime);
         priority = findViewById(R.id.priority);
-        algorithm = findViewById(R.id.algorithm);
+        spinner = findViewById(R.id.algorithm);
 
         // Find the "Add Process" button by its ID
         Button addButton = findViewById(R.id.addProcess);
@@ -60,13 +65,33 @@ public class Process extends AppCompatActivity {
                 addProcess();
             }
         });
+
         // Set up a listener for the Spinner
-        algorithm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item from the Spinner
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                // You can use the selected item as needed
+                processData.setAlgorithm(selectedItem);
+
+                if(!selectedItem.equals("Select Algorithm"))
+                    Toast.makeText(Process.this, "Algorithm: "+selectedItem, Toast.LENGTH_SHORT).show();
+
+                EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
+                if (!selectedItem.equals("Round Robin (Preemptive)")) {
+                    timeQuantumEditText.setEnabled(false);
+                    timeQuantumEditText.setBackgroundResource(R.drawable.btn_disabled);
+                } else {
+                    timeQuantumEditText.setEnabled(true);
+                    timeQuantumEditText.setBackgroundResource(R.drawable.edittext_bg);
+                }
+                EditText priorityEditText = findViewById(R.id.priority);
+                if (!selectedItem.equals("Priority")) {
+                    priorityEditText.setEnabled(false);
+                    priorityEditText.setBackgroundResource(R.drawable.btn_disabled);
+                } else {
+                    priorityEditText.setEnabled(true);
+                    priorityEditText.setBackgroundResource(R.drawable.edittext_bg);
+                }
             }
 
             @Override
@@ -82,10 +107,12 @@ public class Process extends AppCompatActivity {
         View row = tableLayout.findViewById(rowID);
         if (row instanceof TableRow) {
             tableLayout.removeView(row);
+            Toast.makeText(this, "Process Deleted", Toast.LENGTH_SHORT).show();
         }
     }
 
     // Method to handle adding a new process
+    int rowID=0;
     private void addProcess() {
         // Get the text entered by the user in the EditText fields
         String cross = "❌";
@@ -175,7 +202,23 @@ public class Process extends AppCompatActivity {
             // Add the new row to the table layout
             TableLayout tableLayout = findViewById(R.id.tableLayout);
             tableLayout.addView(newRow);
+            Toast.makeText(this, "Process added", Toast.LENGTH_SHORT).show();
         }
     }
 
+    // clicked non-Preemptive
+    public void nonPreemptive(View view) {
+        processData.setAlgorithmType("non-Preemptive");
+        view.setBackgroundResource(R.drawable.btn_left_selected);
+        View rightBtn = findViewById(R.id.preemptive);
+        rightBtn.setBackgroundResource(R.drawable.btn_right);
+        Toast.makeText(this, "Non-Preemptive selected", Toast.LENGTH_SHORT).show();
+    }
+    public void preemptive(View view) {
+        processData.setAlgorithmType("preemptive");
+        view.setBackgroundResource(R.drawable.btn_right_selected);
+        View leftBtn = findViewById(R.id.non_preemptive);
+        leftBtn.setBackgroundResource(R.drawable.btn_left);
+        Toast.makeText(this, "Preemptive selected", Toast.LENGTH_SHORT).show();
+    }
 }
