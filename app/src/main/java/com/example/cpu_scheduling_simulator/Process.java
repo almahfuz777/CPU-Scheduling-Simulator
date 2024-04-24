@@ -22,14 +22,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textview.MaterialTextView;
-
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
 
 public class Process extends AppCompatActivity {
-    // an instance variable for ProcessData
-    private ProcessData processData;
+    private Solve solve;
     //
     private EditText pid;
     private EditText arrivalTime;
@@ -47,9 +44,6 @@ public class Process extends AppCompatActivity {
             return insets;
         });
 
-        // Initializing the ProcessData instance
-        processData = new ProcessData();
-
         // Collect User Inputs
         pid = findViewById(R.id.pid);
         arrivalTime = findViewById(R.id.arrivalTime);
@@ -62,28 +56,41 @@ public class Process extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                // adding new process
                 addProcess();
             }
         });
+
+        solve = new Solve();
 
         // Set up a listener for the Spinner
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                processData.setAlgorithm(selectedItem);
+                solve.setAlgorithm(selectedItem);
 
                 if(!selectedItem.equals("Select Algorithm"))
                     Toast.makeText(Process.this, "Algorithm: "+selectedItem, Toast.LENGTH_SHORT).show();
 
+                // Round Robin
                 EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
                 if (!selectedItem.equals("Round Robin (Preemptive)")) {
+                    solve.setTimeQuantum(-1);
                     timeQuantumEditText.setEnabled(false);
                     timeQuantumEditText.setBackgroundResource(R.drawable.btn_disabled);
                 } else {
+                    // setting time Quantum
+                    String tq = timeQuantumEditText.getText().toString();
+                    if(!tq.isEmpty())
+                        solve.setTimeQuantum(Double.parseDouble(tq));
                     timeQuantumEditText.setEnabled(true);
                     timeQuantumEditText.setBackgroundResource(R.drawable.edittext_bg);
                 }
+
+                // priority
                 EditText priorityEditText = findViewById(R.id.priority);
                 if (!selectedItem.equals("Priority")) {
                     priorityEditText.setEnabled(false);
@@ -109,6 +116,22 @@ public class Process extends AppCompatActivity {
             tableLayout.removeView(row);
             Toast.makeText(this, "Process Deleted", Toast.LENGTH_SHORT).show();
         }
+        // remove from array
+        for (ProcessRow x : solve.getProcessList()) {
+            if (row.getId() == rowID) {
+                solve.getProcessList().remove(x);
+                break;
+            }
+        }
+        // change visibility of table and button in case of empty array
+        if(solve.getProcessList().isEmpty()){
+            Button solveButton = findViewById(R.id.solve);
+            solveButton.setVisibility(View.GONE); // visible only if there's data in the array
+
+            TableLayout table = findViewById(R.id.tableLayout);
+            table.setVisibility(View.GONE);
+        }
+        Log.d("deleteRow called", "new arary size: "+ String.valueOf(solve.getProcessList().size()));
     }
 
     // Method to handle adding a new process
@@ -120,10 +143,16 @@ public class Process extends AppCompatActivity {
         double arrivalT = Double.parseDouble(arrivalTime.getText().toString());
         double burstT = Double.parseDouble(burstTime.getText().toString());
         int priorityy = 0;
+
         if(!(priority.getText().toString().isEmpty()))
             priorityy = Integer.parseInt(priority.getText().toString());
 
         if (!processID.isEmpty() && !(arrivalTime.getText().toString().isEmpty()) && !(burstTime.getText().toString().isEmpty())) {
+            // add new row to array
+            ProcessRow processRow = new ProcessRow(processID, arrivalT, burstT, priorityy);
+            solve.addProcess(processRow);
+
+            // add row to process.xml
             // Create a new row for the table
             rowID++;
             TableRow newRow = new TableRow(this);
@@ -203,22 +232,46 @@ public class Process extends AppCompatActivity {
             TableLayout tableLayout = findViewById(R.id.tableLayout);
             tableLayout.addView(newRow);
             Toast.makeText(this, "Process added", Toast.LENGTH_SHORT).show();
+
+            Button solveButton = findViewById(R.id.solve);
+            solveButton.setVisibility(View.VISIBLE); // visible only if there's data in the array
+
+            TableLayout table = findViewById(R.id.tableLayout);
+            table.setVisibility(View.VISIBLE);
         }
     }
 
     // clicked non-Preemptive
     public void nonPreemptive(View view) {
-        processData.setAlgorithmType("non-Preemptive");
+        solve.setAlgorithmType("non-Preemptive");
         view.setBackgroundResource(R.drawable.btn_left_selected);
         View rightBtn = findViewById(R.id.preemptive);
         rightBtn.setBackgroundResource(R.drawable.btn_right);
         Toast.makeText(this, "Non-Preemptive selected", Toast.LENGTH_SHORT).show();
     }
     public void preemptive(View view) {
-        processData.setAlgorithmType("preemptive");
+        solve.setAlgorithmType("preemptive");
         view.setBackgroundResource(R.drawable.btn_right_selected);
         View leftBtn = findViewById(R.id.non_preemptive);
         leftBtn.setBackgroundResource(R.drawable.btn_left);
         Toast.makeText(this, "Preemptive selected", Toast.LENGTH_SHORT).show();
     }
+    // clicked solved
+    public void solve(View view) {
+        Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
+        // get process sequence
+        ArrayList<String> processSequence = new ArrayList<>();
+        processSequence = solve.getProcessSequence();
+
+        // get start time sequence
+        ArrayList<Double> timeSequence = new ArrayList<>();
+        timeSequence = solve.getTimeSequence();
+
+        // build the gantt chart
+        TextView res = findViewById(R.id.result);
+        res.setVisibility(View.VISIBLE);
+        res.setText("processSequence = "+ processSequence+"\n"+"timeSequence = "+String.valueOf(timeSequence));
+
+    }
+
 }
