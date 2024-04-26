@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class Solve {
     private String algorithmType;
@@ -57,43 +58,60 @@ public class Solve {
     }
 
     // calculations
-    private ArrayList<String> processSequence = new ArrayList<>();
-    private ArrayList<Double> timeSequence = new ArrayList<>();
-
-    public ArrayList<String> getProcessSequence(){
+    public void getSequence(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
         // referring to the appropriate algorithm
-        switch (algorithm){
-            case "FCFS (non-Preemptive)":
-                FCFS_calulation();
-                break;
-            case "Round Robin (Preemptive)":
-//                RR_calculation();
-                break;
-            case "SJF":
-//                SJF_calculation();
-                break;
-            case "Priority":
-//                Priority_calculation();
-                break;
-            default:
-                Log.d("Process Selection error", "getProcessSequence: default");
-                break;
+        if(algorithmType.equals("non-Preemptive")){
+            switch (algorithm){
+                case "FCFS":
+                    FCFS_nonPreemptive(processSequence, timeSequence);
+                    break;
+                case "SJF":
+                    SJF_nonPreemptive(processSequence, timeSequence);
+                    break;
+                case "Priority":
+                    Priority_nonPreemptive(processSequence, timeSequence);
+                    break;
+                default:
+                    Log.d("Process Selection error", "getProcessSequence: default");
+                    break;
+            }
+        }
+        else if(algorithmType.equals("preemptive")){
+            switch (algorithm){
+                case "Round Robin":
+                    RR_preemptive(processSequence, timeSequence);
+                    break;
+                case "SJF":
+                    SJF_preemptive(processSequence, timeSequence);
+                    break;
+                case "Priority":
+                    Priority_preemptive(processSequence, timeSequence);
+                    break;
+                default:
+                    Log.d("Process Selection error", "getProcessSequence: default");
+                    break;
+            }
+        }
+        else{
+            Log.d("process selection error", "selected wrong processType");
         }
 
         Log.d("processSequence", String.valueOf(processSequence));
-        return processSequence;
-    }
-    public ArrayList<Double> getTimeSequence() {
         Log.d("timeSequence", String.valueOf(timeSequence));
-        return timeSequence;
     }
 
-    // algorithm types
-    private ArrayList<String> FCFS_calulation() {
-        // declaring arrays
-        ArrayList<String> p_seq = new ArrayList<>();
-        ArrayList<Double> t_seq = new ArrayList<>();
-        // Sorting processList according to ArrivalTime
+    private double waitingTime;
+    public double getWaitingTime() {
+        return waitingTime;
+    }
+    public double getAvgWaitingTime(){
+        Log.d("awt", String.valueOf(waitingTime/processList.size()));
+        return waitingTime/processList.size();
+    }
+
+    // non-Preemptive algorithms
+    private void FCFS_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+        // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
@@ -101,27 +119,134 @@ public class Solve {
             }
         });
 
-        double time = processList.get(0).getArrivalTime();
-        t_seq.add(time);
+        // getting the initial start time
+        double currentTime = processList.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
 
+        waitingTime = 0;
+        // iterating and executing processes
         for(ProcessRow x:processList){
-            p_seq.add(x.getProcessID());
-            time+=x.getBurstTime();
-            t_seq.add(time);
+            processSequence.add(x.getProcessID());
+            waitingTime+=(currentTime-x.getArrivalTime());
+            currentTime+=x.getBurstTime();
+            timeSequence.add(currentTime);
         }
-        processSequence = p_seq;
-        timeSequence = t_seq;
-        return processSequence;
-    }
-    /*
-    private ArrayList<String> RR_calculation() {
 
     }
-    private ArrayList<String> SJF_calculation() {
+
+    private void SJF_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+        // sorting processList according to ArrivalTime
+        Collections.sort(processList, new Comparator<ProcessRow>() {
+            @Override
+            public int compare(ProcessRow p1, ProcessRow p2) {
+                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+            }
+        });
+
+        // copying the original ArrayList to a temporary List
+        List<ProcessRow> rows = new ArrayList<>(processList);
+
+        // adding first appeared process
+        waitingTime = 0;
+        double currentTime = rows.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
+
+        while(!rows.isEmpty()){
+            List<ProcessRow> availableRows = new ArrayList<>();
+            // populating available rows
+            for (ProcessRow x: rows){
+                if(x.getArrivalTime() <= currentTime)
+                    availableRows.add(x);
+            }
+            // sort them according to burst time
+            Collections.sort(availableRows, new Comparator<ProcessRow>() {
+                @Override
+                public int compare(ProcessRow p1, ProcessRow p2) {
+                    return Double.compare(p1.getBurstTime(), p2.getBurstTime());
+                }
+            });
+
+            // executing one process
+            ProcessRow row = availableRows.get(0);
+            processSequence.add(row.getProcessID());
+            waitingTime+=(currentTime-row.getArrivalTime());    // waiting time
+            currentTime+=row.getBurstTime();
+            timeSequence.add(currentTime); // end time for the process
+
+            // deleting the process from list
+            for (int i=0;i<rows.size();i++){
+                if(rows.get(i).getProcessID().equals(row.getProcessID())){
+                    rows.remove(i);
+                    break;
+                }
+            }
+
+        }
+    }
+
+    private void Priority_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+        // sorting processList according to ArrivalTime
+        Collections.sort(processList, new Comparator<ProcessRow>() {
+            @Override
+            public int compare(ProcessRow p1, ProcessRow p2) {
+                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+            }
+        });
+
+        // copying the original ArrayList to a temporary List
+        List<ProcessRow> rows = new ArrayList<>(processList);
+
+        // adding first appeared process
+        waitingTime = 0;
+        double currentTime = rows.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
+
+        while (!rows.isEmpty()) {
+            List<ProcessRow> availableRows = new ArrayList<>();
+            // populating available rows
+            for (ProcessRow x : rows) {
+                if (x.getArrivalTime() <= currentTime)
+                    availableRows.add(x);
+            }
+            // sort them according to priority
+            Collections.sort(availableRows, new Comparator<ProcessRow>() {
+                @Override
+                public int compare(ProcessRow p1, ProcessRow p2) {
+                    return Double.compare(p1.getPriority(), p2.getPriority());
+                }
+            });
+
+            // executing one process
+            ProcessRow row = availableRows.get(0);
+            processSequence.add(row.getProcessID());
+            waitingTime += (currentTime - row.getArrivalTime());    // waiting time
+            currentTime += row.getBurstTime();
+            timeSequence.add(currentTime); // end time for the process
+
+            // deleting the process from list
+            for (int i = 0; i < rows.size(); i++) {
+                if (rows.get(i).getProcessID().equals(row.getProcessID())) {
+                    rows.remove(i);
+                    break;
+                }
+            }
+
+
+        }
+    }
+
+    // preemptive algorithms
+    private void RR_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
 
     }
-    private ArrayList<String> Priority_calculation() {
+    private void SJF_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
 
     }
-*/
+    private void Priority_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+
+    }
+
+
+
 }
+

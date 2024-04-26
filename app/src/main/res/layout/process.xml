@@ -76,7 +76,6 @@
                 android:layout_height="50dp"
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/edittext_bg"
-                android:entries="@array/dropdown_items"
                 android:padding="12dp"
                 android:textColor="#707070"
                 android:textSize="18sp"

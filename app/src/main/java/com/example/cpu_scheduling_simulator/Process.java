@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Process extends AppCompatActivity {
@@ -34,6 +36,9 @@ public class Process extends AppCompatActivity {
     private EditText priority;
     private Spinner spinner;
 
+    private ArrayList<String> algorithms;
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -44,28 +49,36 @@ public class Process extends AppCompatActivity {
             return insets;
         });
 
-        // Collect User Inputs
+        // solve
+        solve = new Solve();
+
+        // find views
         pid = findViewById(R.id.pid);
         arrivalTime = findViewById(R.id.arrivalTime);
         burstTime = findViewById(R.id.burstTime);
         priority = findViewById(R.id.priority);
         spinner = findViewById(R.id.algorithm);
 
-        // Find the "Add Process" button by its ID
+        // Adding listener to "ADD PROCESS"
         Button addButton = findViewById(R.id.addProcess);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 // adding new process
-                addProcess();
+                try {
+                    addProcess();
+                }catch (Exception e){
+                    Toast.makeText(Process.this, "Invalid Input", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        solve = new Solve();
-
         // Set up a listener for the Spinner
+        algorithms = new ArrayList<>(Arrays.asList("Select Algorithm", "FCFS", "Round Robin", "SJF", "Priority"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, algorithms);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -106,35 +119,11 @@ public class Process extends AppCompatActivity {
                 // Handle the case where nothing is selected
             }
         });
+
     }
 
-    // Delete rows from process table
-    public void deleteRow(int rowID) {
-        TableLayout tableLayout = findViewById(R.id.tableLayout);
-        View row = tableLayout.findViewById(rowID);
-        if (row instanceof TableRow) {
-            tableLayout.removeView(row);
-            Toast.makeText(this, "Process Deleted", Toast.LENGTH_SHORT).show();
-        }
-        // remove from array
-        for (ProcessRow x : solve.getProcessList()) {
-            if (row.getId() == rowID) {
-                solve.getProcessList().remove(x);
-                break;
-            }
-        }
-        // change visibility of table and button in case of empty array
-        if(solve.getProcessList().isEmpty()){
-            Button solveButton = findViewById(R.id.solve);
-            solveButton.setVisibility(View.GONE); // visible only if there's data in the array
 
-            TableLayout table = findViewById(R.id.tableLayout);
-            table.setVisibility(View.GONE);
-        }
-        Log.d("deleteRow called", "new arary size: "+ String.valueOf(solve.getProcessList().size()));
-    }
-
-    // Method to handle adding a new process
+    // ADD PROCESS
     int rowID=0;
     private void addProcess() {
         // Get the text entered by the user in the EditText fields
@@ -239,6 +228,35 @@ public class Process extends AppCompatActivity {
             TableLayout table = findViewById(R.id.tableLayout);
             table.setVisibility(View.VISIBLE);
         }
+        else{
+            Toast.makeText(this, "Insert values first", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    // DELETE PROCESS
+    public void deleteRow(int rowID) {
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
+        View row = tableLayout.findViewById(rowID);
+        if (row instanceof TableRow) {
+            tableLayout.removeView(row);
+            Toast.makeText(this, "Process Deleted", Toast.LENGTH_SHORT).show();
+        }
+        // remove from array
+        for (ProcessRow x : solve.getProcessList()) {
+            if (row.getId() == rowID) {
+                solve.getProcessList().remove(x);
+                break;
+            }
+        }
+        // change visibility of table and button in case of empty array
+        if(solve.getProcessList().isEmpty()){
+            Button solveButton = findViewById(R.id.solve);
+            solveButton.setVisibility(View.GONE); // visible only if there's data in the array
+
+            TableLayout table = findViewById(R.id.tableLayout);
+            table.setVisibility(View.GONE);
+        }
+        Log.d("deleteRow called", "new arary size: "+ String.valueOf(solve.getProcessList().size()));
     }
 
     // clicked non-Preemptive
@@ -248,6 +266,10 @@ public class Process extends AppCompatActivity {
         View rightBtn = findViewById(R.id.preemptive);
         rightBtn.setBackgroundResource(R.drawable.btn_right);
         Toast.makeText(this, "Non-Preemptive selected", Toast.LENGTH_SHORT).show();
+
+        algorithms.remove("Round Robin");
+        if (!algorithms.contains("FCFS"))
+            algorithms.add(1, "FCFS");
     }
     public void preemptive(View view) {
         solve.setAlgorithmType("preemptive");
@@ -255,22 +277,25 @@ public class Process extends AppCompatActivity {
         View leftBtn = findViewById(R.id.non_preemptive);
         leftBtn.setBackgroundResource(R.drawable.btn_left);
         Toast.makeText(this, "Preemptive selected", Toast.LENGTH_SHORT).show();
+
+        algorithms.remove("FCFS");
+        if (!algorithms.contains("Round Robin"))
+            algorithms.add(1, "Round Robin");
     }
     // clicked solved
     public void solve(View view) {
         Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
-        // get process sequence
         ArrayList<String> processSequence = new ArrayList<>();
-        processSequence = solve.getProcessSequence();
-
-        // get start time sequence
         ArrayList<Double> timeSequence = new ArrayList<>();
-        timeSequence = solve.getTimeSequence();
+
+        // get sequences
+        solve.getSequence(processSequence, timeSequence);
+        double awt = solve.getAvgWaitingTime();
 
         // build the gantt chart
         TextView res = findViewById(R.id.result);
         res.setVisibility(View.VISIBLE);
-        res.setText("processSequence = "+ processSequence+"\n"+"timeSequence = "+String.valueOf(timeSequence));
+        res.setText("processSequence = "+ processSequence+"\n"+"timeSequence = "+String.valueOf(timeSequence)+"\nawt= "+awt);
 
     }
 
