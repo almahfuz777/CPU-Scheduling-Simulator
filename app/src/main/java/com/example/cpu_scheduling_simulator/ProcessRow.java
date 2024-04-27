@@ -2,9 +2,9 @@ package com.example.cpu_scheduling_simulator;
 
 public class ProcessRow {
     private String processID;
-    private double arrivalTime;
-    private double finishTime;
-    private double burstTime;
+    private int arrivalTime;
+    private int finishTime;
+    private int burstTime;
     private int priority;
 
     public ProcessRow(){
@@ -14,7 +14,7 @@ public class ProcessRow {
         this.priority = 0;
         this.finishTime = -1;
     }
-    public ProcessRow(String processID, double arrivalTime, double burstTime, int priority) {
+    public ProcessRow(String processID, int arrivalTime, int burstTime, int priority) {
         this.processID = processID;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
@@ -30,19 +30,19 @@ public class ProcessRow {
         this.processID = processID;
     }
 
-    public double getArrivalTime() {
+    public int getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(double arrivalTime) {
+    public void setArrivalTime(int arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public double getBurstTime() {
+    public int getBurstTime() {
         return burstTime;
     }
 
-    public void setBurstTime(double burstTime) {
+    public void setBurstTime(int burstTime) {
         this.burstTime = burstTime;
     }
 
@@ -53,10 +53,10 @@ public class ProcessRow {
     public void setPriority(int priority) {
         this.priority = priority;
     }
-    public double getFinishTime() {
+    public int getFinishTime() {
         return finishTime;
     }
-    public void setFinishTime(double finishTime) {
+    public void setFinishTime(int finishTime) {
         this.finishTime = finishTime;
     }
 }

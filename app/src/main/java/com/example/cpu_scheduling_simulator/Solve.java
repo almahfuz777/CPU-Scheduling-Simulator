@@ -10,7 +10,7 @@ import java.util.List;
 public class Solve {
     private String algorithmType;
     private String algorithm;
-    private double timeQuantum;
+    private int timeQuantum;
     private ArrayList<ProcessRow> processList;
 
     public Solve(){
@@ -19,7 +19,7 @@ public class Solve {
         this.timeQuantum = 0;
         this.processList = new ArrayList<>();
     }
-    public Solve(String algorithmType, String algorithm, double timeQuantum, ArrayList<ProcessRow> processList){
+    public Solve(String algorithmType, String algorithm, int timeQuantum, ArrayList<ProcessRow> processList){
         this.algorithmType = algorithmType;
         this.algorithm = algorithm;
         this.timeQuantum = timeQuantum;
@@ -39,10 +39,10 @@ public class Solve {
     public String getAlgorithm() {
         return algorithm;
     }
-    public double getTimeQuantum() {
+    public int getTimeQuantum() {
         return timeQuantum;
     }
-    public void setTimeQuantum(double timeQuantum) {
+    public void setTimeQuantum(int timeQuantum) {
         this.timeQuantum = timeQuantum;
     }
     public ArrayList<ProcessRow> getProcessList() {
@@ -58,7 +58,7 @@ public class Solve {
     }
 
     // calculations
-    public void getSequence(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    public void getSequence(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // referring to the appropriate algorithm
         if(algorithmType.equals("non-Preemptive")){
             switch (algorithm){
@@ -100,28 +100,28 @@ public class Solve {
         Log.d("timeSequence", String.valueOf(timeSequence));
     }
 
-    private double waitingTime;
-    public double getWaitingTime() {
+    private int waitingTime;
+    public int getWaitingTime() {
         return waitingTime;
     }
     public double getAvgWaitingTime(){
         Log.d("waiting time", String.valueOf(waitingTime));
         Log.d("awt", String.valueOf(waitingTime/processList.size()));
-        return waitingTime/processList.size();
+        return ((double) (waitingTime))/processList.size();
     }
 
     // non-Preemptive algorithms
-    private void FCFS_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void FCFS_nonPreemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
-                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
             }
         });
 
         // getting the initial start time
-        double currentTime = processList.get(0).getArrivalTime();
+        int currentTime = processList.get(0).getArrivalTime();
         timeSequence.add(currentTime);
 
         waitingTime = 0;
@@ -135,12 +135,12 @@ public class Solve {
 
     }
 
-    private void SJF_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void SJF_nonPreemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
-                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
             }
         });
 
@@ -149,7 +149,7 @@ public class Solve {
 
         // adding first appeared process
         waitingTime = 0;
-        double currentTime = rows.get(0).getArrivalTime();
+        int currentTime = rows.get(0).getArrivalTime();
         timeSequence.add(currentTime);
 
         while(!rows.isEmpty()){
@@ -163,7 +163,7 @@ public class Solve {
             Collections.sort(availableRows, new Comparator<ProcessRow>() {
                 @Override
                 public int compare(ProcessRow p1, ProcessRow p2) {
-                    return Double.compare(p1.getBurstTime(), p2.getBurstTime());
+                    return Integer.compare(p1.getBurstTime(), p2.getBurstTime());
                 }
             });
 
@@ -185,12 +185,12 @@ public class Solve {
         }
     }
 
-    private void Priority_nonPreemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void Priority_nonPreemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
-                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
             }
         });
 
@@ -199,7 +199,7 @@ public class Solve {
 
         // adding first appeared process
         waitingTime = 0;
-        double currentTime = rows.get(0).getArrivalTime();
+        int currentTime = rows.get(0).getArrivalTime();
         timeSequence.add(currentTime);
 
         while (!rows.isEmpty()) {
@@ -213,7 +213,7 @@ public class Solve {
             Collections.sort(availableRows, new Comparator<ProcessRow>() {
                 @Override
                 public int compare(ProcessRow p1, ProcessRow p2) {
-                    return Double.compare(p1.getPriority(), p2.getPriority());
+                    return Integer.compare(p1.getPriority(), p2.getPriority());
                 }
             });
 
@@ -237,15 +237,15 @@ public class Solve {
     }
 
     // preemptive algorithms
-    private void RR_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void RR_preemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
 
     }
-    private void SJF_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void SJF_preemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
-                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
             }
         });
 
@@ -254,7 +254,7 @@ public class Solve {
 
         // adding first appeared process
         waitingTime = 0;
-        double currentTime = rows.get(0).getArrivalTime();
+        int currentTime = rows.get(0).getArrivalTime();
         timeSequence.add(currentTime);
 
         String lastAppeared = "";
@@ -272,7 +272,7 @@ public class Solve {
             Collections.sort(availableRows, new Comparator<ProcessRow>() {
                 @Override
                 public int compare(ProcessRow p1, ProcessRow p2) {
-                    return Double.compare(p1.getBurstTime(), p2.getBurstTime());
+                    return Integer.compare(p1.getBurstTime(), p2.getBurstTime());
                 }
             });
 
@@ -310,12 +310,12 @@ public class Solve {
         timeSequence.add(currentTime);
 
     }
-    private void Priority_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+    private void Priority_preemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
         // sorting processList according to ArrivalTime
         Collections.sort(processList, new Comparator<ProcessRow>() {
             @Override
             public int compare(ProcessRow p1, ProcessRow p2) {
-                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
             }
         });
 
@@ -324,7 +324,7 @@ public class Solve {
 
         // adding first appeared process
         waitingTime = 0;
-        double currentTime = rows.get(0).getArrivalTime();
+        int currentTime = rows.get(0).getArrivalTime();
         timeSequence.add(currentTime);
 
         String lastAppeared = "";
@@ -342,7 +342,7 @@ public class Solve {
             Collections.sort(availableRows, new Comparator<ProcessRow>() {
                 @Override
                 public int compare(ProcessRow p1, ProcessRow p2) {
-                    return Double.compare(p1.getPriority(), p2.getPriority());
+                    return Integer.compare(p1.getPriority(), p2.getPriority());
                 }
             });
 

@@ -102,7 +102,7 @@ public class Process extends AppCompatActivity {
                     // setting time Quantum
                     String tq = timeQuantumEditText.getText().toString();
                     if(!tq.isEmpty())
-                        solve.setTimeQuantum(Double.parseDouble(tq));
+                        solve.setTimeQuantum(Integer.parseInt(tq));
                     timeQuantumEditText.setEnabled(true);
                     timeQuantumEditText.setBackgroundResource(R.drawable.edittext_bg);
                 }
@@ -133,8 +133,8 @@ public class Process extends AppCompatActivity {
         // Get the text entered by the user in the EditText fields
         String cross = "❌";
         String processID = pid.getText().toString();
-        double arrivalT = Double.parseDouble(arrivalTime.getText().toString());
-        double burstT = Double.parseDouble(burstTime.getText().toString());
+        int arrivalT = Integer.parseInt(arrivalTime.getText().toString());
+        int burstT = Integer.parseInt(burstTime.getText().toString());
         int priorityy = 0;
 
         if(!(priority.getText().toString().isEmpty()))
@@ -298,7 +298,7 @@ public class Process extends AppCompatActivity {
     public void solve(View view) {
         Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
         ArrayList<String> processSequence = new ArrayList<>();
-        ArrayList<Double> timeSequence = new ArrayList<>();
+        ArrayList<Integer> timeSequence = new ArrayList<>();
 
         // get sequences
         solve.getSequence(processSequence, timeSequence);
