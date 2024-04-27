@@ -74,8 +74,12 @@ public class Process extends AppCompatActivity {
         });
 
         // Set up a listener for the Spinner
+        spinner.setEnabled(false);
+        spinner.setClickable(false);
+
         algorithms = new ArrayList<>(Arrays.asList("Select Algorithm", "FCFS", "Round Robin", "SJF", "Priority"));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, algorithms);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, algorithms);
+        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);   // checkbox
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
 
@@ -256,6 +260,8 @@ public class Process extends AppCompatActivity {
             TableLayout table = findViewById(R.id.tableLayout);
             table.setVisibility(View.GONE);
         }
+        View res = findViewById(R.id.result);
+        res.setVisibility(View.GONE);
         Log.d("deleteRow called", "new arary size: "+ String.valueOf(solve.getProcessList().size()));
     }
 
@@ -270,6 +276,9 @@ public class Process extends AppCompatActivity {
         algorithms.remove("Round Robin");
         if (!algorithms.contains("FCFS"))
             algorithms.add(1, "FCFS");
+
+        spinner.setEnabled(true);
+        spinner.setClickable(true);
     }
     public void preemptive(View view) {
         solve.setAlgorithmType("preemptive");
@@ -281,6 +290,9 @@ public class Process extends AppCompatActivity {
         algorithms.remove("FCFS");
         if (!algorithms.contains("Round Robin"))
             algorithms.add(1, "Round Robin");
+
+        spinner.setEnabled(true);
+        spinner.setClickable(true);
     }
     // clicked solved
     public void solve(View view) {

@@ -105,6 +105,7 @@ public class Solve {
         return waitingTime;
     }
     public double getAvgWaitingTime(){
+        Log.d("waiting time", String.valueOf(waitingTime));
         Log.d("awt", String.valueOf(waitingTime/processList.size()));
         return waitingTime/processList.size();
     }
@@ -240,9 +241,143 @@ public class Solve {
 
     }
     private void SJF_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+        // sorting processList according to ArrivalTime
+        Collections.sort(processList, new Comparator<ProcessRow>() {
+            @Override
+            public int compare(ProcessRow p1, ProcessRow p2) {
+                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+            }
+        });
+
+        // copying the original ArrayList to a temporary List
+        List<ProcessRow> rows = new ArrayList<>(processList);
+
+        // adding first appeared process
+        waitingTime = 0;
+        double currentTime = rows.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
+
+        String lastAppeared = "";
+        int skip=0;
+
+        while (!rows.isEmpty()) {
+            List<ProcessRow> availableRows = new ArrayList<>();
+            // populating available rows
+            for (ProcessRow x : rows) {
+                if (x.getArrivalTime() <= currentTime)
+                    availableRows.add(x);
+            }
+
+            // sort them according to burst time
+            Collections.sort(availableRows, new Comparator<ProcessRow>() {
+                @Override
+                public int compare(ProcessRow p1, ProcessRow p2) {
+                    return Double.compare(p1.getBurstTime(), p2.getBurstTime());
+                }
+            });
+
+            // executing the first process (most priority)
+            ProcessRow row = availableRows.get(0);
+
+            if(!row.getProcessID().equals(lastAppeared)) {
+                processSequence.add(row.getProcessID());
+                lastAppeared = row.getProcessID();
+                skip++; // different process from the last one. skips first one.
+                if(skip>1) timeSequence.add(currentTime);   // end time of the last process
+
+                // waiting time
+                if (row.getFinishTime() != -1)
+                    waitingTime += (currentTime - row.getFinishTime());
+                else
+                    waitingTime += (currentTime - row.getArrivalTime());
+            }
+
+            row.setFinishTime(currentTime+1);
+            row.setBurstTime(row.getBurstTime() - 1);
+            currentTime++;
+
+            // if process is over
+            if (row.getBurstTime() == 0) {
+                for (int i = 0; i < rows.size(); i++) {
+                    if (rows.get(i).getProcessID().equals(row.getProcessID())) {
+                        rows.remove(i); // removing from main list
+                        break;
+                    }
+                }
+            }
+
+        }
+        timeSequence.add(currentTime);
 
     }
     private void Priority_preemptive(ArrayList<String> processSequence, ArrayList<Double> timeSequence) {
+        // sorting processList according to ArrivalTime
+        Collections.sort(processList, new Comparator<ProcessRow>() {
+            @Override
+            public int compare(ProcessRow p1, ProcessRow p2) {
+                return Double.compare(p1.getArrivalTime(), p2.getArrivalTime());
+            }
+        });
+
+        // copying the original ArrayList to a temporary List
+        List<ProcessRow> rows = new ArrayList<>(processList);
+
+        // adding first appeared process
+        waitingTime = 0;
+        double currentTime = rows.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
+
+        String lastAppeared = "";
+        int skip=0;
+
+        while (!rows.isEmpty()) {
+            List<ProcessRow> availableRows = new ArrayList<>();
+            // populating available rows
+            for (ProcessRow x : rows) {
+                if (x.getArrivalTime() <= currentTime)
+                    availableRows.add(x);
+            }
+
+            // sort them according to priority
+            Collections.sort(availableRows, new Comparator<ProcessRow>() {
+                @Override
+                public int compare(ProcessRow p1, ProcessRow p2) {
+                    return Double.compare(p1.getPriority(), p2.getPriority());
+                }
+            });
+
+            // executing the first process (most priority)
+            ProcessRow row = availableRows.get(0);
+
+            if(!row.getProcessID().equals(lastAppeared)) {
+                processSequence.add(row.getProcessID());
+                lastAppeared = row.getProcessID();
+                skip++; // different process from the last one. skips first one.
+                if(skip>1) timeSequence.add(currentTime);   // end time of the last process
+
+                // waiting time
+                if (row.getFinishTime() != -1)
+                    waitingTime += (currentTime - row.getFinishTime());
+                else
+                    waitingTime += (currentTime - row.getArrivalTime());
+            }
+
+            row.setFinishTime(currentTime+1);
+            row.setBurstTime(row.getBurstTime() - 1);
+            currentTime++;
+
+            // if process is over
+            if (row.getBurstTime() == 0) {
+                for (int i = 0; i < rows.size(); i++) {
+                    if (rows.get(i).getProcessID().equals(row.getProcessID())) {
+                        rows.remove(i); // removing from main list
+                        break;
+                    }
+                }
+            }
+
+        }
+        timeSequence.add(currentTime);
 
     }
 
