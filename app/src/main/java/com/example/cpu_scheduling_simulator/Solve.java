@@ -12,18 +12,21 @@ public class Solve {
     private String algorithm;
     private int timeQuantum;
     private ArrayList<ProcessRow> processList;
+    private ArrayList<Integer> cycle;
 
     public Solve(){
         this.algorithmType = "";
         this.algorithm = "";
-        this.timeQuantum = 0;
+        this.timeQuantum = -1;
         this.processList = new ArrayList<>();
+        this.cycle = new ArrayList<>();
     }
     public Solve(String algorithmType, String algorithm, int timeQuantum, ArrayList<ProcessRow> processList){
         this.algorithmType = algorithmType;
         this.algorithm = algorithm;
         this.timeQuantum = timeQuantum;
         this.processList = processList;
+        this.cycle = new ArrayList<>();
     }
 
     // getters & setters
@@ -50,6 +53,9 @@ public class Solve {
     }
     public void setProcessList(ArrayList<ProcessRow> processList) {
         this.processList = processList;
+    }
+    public ArrayList<Integer> getCycle() {
+        return cycle;
     }
 
     // Add row to processList
@@ -79,7 +85,11 @@ public class Solve {
         else if(algorithmType.equals("preemptive")){
             switch (algorithm){
                 case "Round Robin":
-                    RR_preemptive(processSequence, timeSequence);
+                    try {
+                        RR_preemptive(processSequence, timeSequence);
+                    }catch (Exception e){
+                        Log.d("Error", "RR_preempive error ");
+                    }
                     break;
                 case "SJF":
                     SJF_preemptive(processSequence, timeSequence);
@@ -238,6 +248,71 @@ public class Solve {
 
     // preemptive algorithms
     private void RR_preemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {
+        Log.d("Entered the function RR", "RR_preemptive: ");
+        // sorting processList according to ArrivalTime
+        Collections.sort(processList, new Comparator<ProcessRow>() {
+            @Override
+            public int compare(ProcessRow p1, ProcessRow p2) {
+                return Integer.compare(p1.getArrivalTime(), p2.getArrivalTime());
+            }
+        });
+
+        // copying the original ArrayList to a temporary List
+        List<ProcessRow> rows = new ArrayList<>(processList);
+        List<ProcessRow> waitingList = new ArrayList<>();
+
+        // adding first appeared process
+        waitingTime = 0;
+        int currentTime = rows.get(0).getArrivalTime();
+        timeSequence.add(currentTime);
+        cycle.add(currentTime); // first cycle starts
+        int cnt = 0;
+
+        while (!rows.isEmpty()) {
+            Log.d(String.valueOf(cnt), "loop"+cnt);
+            cnt++;
+            List<ProcessRow> availableRows = new ArrayList<>();
+            // populating available rows
+            for (ProcessRow x : rows) {
+                if (x.getArrivalTime() <= currentTime)
+                    availableRows.add(x);
+            }
+
+            //
+
+            // executing the first process (most priority)
+            ProcessRow row = availableRows.get(0);
+            processSequence.add(row.getProcessID());
+
+            int duration = Math.min(row.getBurstTime(), timeQuantum);
+
+            row.setBurstTime(row.getBurstTime()-duration);
+            timeSequence.add(currentTime + duration);//
+
+
+            // waiting time
+            if(row.getFinishTime()==-1){
+                waitingTime+=(currentTime-row.getArrivalTime());
+                row.setFinishTime(currentTime+duration);
+            }
+            else {
+                waitingTime += (currentTime - row.getFinishTime());
+            }
+
+            if(row.getBurstTime()>0)
+                waitingList.add(row);
+            rows.remove(row);
+
+            currentTime+=duration;
+
+            if(rows.isEmpty()){
+                cycle.add(currentTime); //end of a cycle
+//                availableRows = new ArrayList<>(waitingList);
+                rows.addAll(waitingList);
+                waitingList.clear();
+            }
+
+        }
 
     }
     private void SJF_preemptive(ArrayList<String> processSequence, ArrayList<Integer> timeSequence) {

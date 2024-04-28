@@ -94,15 +94,10 @@ public class Process extends AppCompatActivity {
 
                 // Round Robin
                 EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
-                if (!selectedItem.equals("Round Robin (Preemptive)")) {
-                    solve.setTimeQuantum(-1);
+                if (!selectedItem.equals("Round Robin")) {
                     timeQuantumEditText.setEnabled(false);
                     timeQuantumEditText.setBackgroundResource(R.drawable.btn_disabled);
                 } else {
-                    // setting time Quantum
-                    String tq = timeQuantumEditText.getText().toString();
-                    if(!tq.isEmpty())
-                        solve.setTimeQuantum(Integer.parseInt(tq));
                     timeQuantumEditText.setEnabled(true);
                     timeQuantumEditText.setBackgroundResource(R.drawable.edittext_bg);
                 }
@@ -296,7 +291,18 @@ public class Process extends AppCompatActivity {
     }
     // clicked solved
     public void solve(View view) {
-        Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
+
+        // Time Quantum check for Round Robin
+        EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
+        String tq = timeQuantumEditText.getText().toString();
+        solve.setTimeQuantum(Integer.parseInt(tq));
+
+        if(solve.getAlgorithm().equals("Round Robin") && (solve.getTimeQuantum()==-1)) {
+            Toast.makeText(this, "Enter a Time Quantum", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         ArrayList<String> processSequence = new ArrayList<>();
         ArrayList<Integer> timeSequence = new ArrayList<>();
 
@@ -309,6 +315,11 @@ public class Process extends AppCompatActivity {
         res.setVisibility(View.VISIBLE);
         res.setText("processSequence = "+ processSequence+"\n"+"timeSequence = "+String.valueOf(timeSequence)+"\nawt= "+awt);
 
+        if(solve.getAlgorithm().equals("Round Robin")){
+            ArrayList<Integer> cycle = solve.getCycle();
+            res.append("\nCycleSequence = "+String.valueOf(cycle));
+            Log.d("cycle", String.valueOf(cycle));
+        }
     }
 
 }
