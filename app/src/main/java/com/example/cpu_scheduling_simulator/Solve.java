@@ -58,6 +58,10 @@ public class Solve {
         return cycle;
     }
 
+    public void setCycle(ArrayList<Integer> cycle) {
+        this.cycle = cycle;
+    }
+
     // Add row to processList
     public void addProcess(ProcessRow processRow) {
         processList.add(processRow);
@@ -266,11 +270,11 @@ public class Solve {
         int currentTime = rows.get(0).getArrivalTime();
         timeSequence.add(currentTime);
         cycle.add(currentTime); // first cycle starts
-        int cnt = 0;
+//        int cnt = 0;
 
         while (!rows.isEmpty()) {
-            Log.d(String.valueOf(cnt), "loop"+cnt);
-            cnt++;
+//            Log.d(String.valueOf(cnt), "loop"+cnt);
+//            cnt++;
             List<ProcessRow> availableRows = new ArrayList<>();
             // populating available rows
             for (ProcessRow x : rows) {

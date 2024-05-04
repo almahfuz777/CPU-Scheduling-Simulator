@@ -35,6 +35,7 @@ public class Process extends AppCompatActivity {
     private EditText burstTime;
     private EditText priority;
     private Spinner spinner;
+    private EditText timeQuantum;
 
     private ArrayList<String> algorithms;
 
@@ -58,6 +59,7 @@ public class Process extends AppCompatActivity {
         burstTime = findViewById(R.id.burstTime);
         priority = findViewById(R.id.priority);
         spinner = findViewById(R.id.algorithm);
+        timeQuantum = findViewById(R.id.timeQuantum);
 
         // Adding listener to "ADD PROCESS"
         Button addButton = findViewById(R.id.addProcess);
@@ -226,6 +228,12 @@ public class Process extends AppCompatActivity {
 
             TableLayout table = findViewById(R.id.tableLayout);
             table.setVisibility(View.VISIBLE);
+
+            // clear input boxes
+            pid.setText("");
+            arrivalTime.setText("");
+            burstTime.setText("");
+            priority.setText("");
         }
         else{
             Toast.makeText(this, "Insert values first", Toast.LENGTH_SHORT).show();
@@ -255,8 +263,10 @@ public class Process extends AppCompatActivity {
             TableLayout table = findViewById(R.id.tableLayout);
             table.setVisibility(View.GONE);
         }
-        View res = findViewById(R.id.result);
-        res.setVisibility(View.GONE);
+//        View res = findViewById(R.id.result);
+//        res.setVisibility(View.GONE);
+        Button clearButton = findViewById(R.id.clear);
+        clearButton.setVisibility(View.GONE);
         Log.d("deleteRow called", "new arary size: "+ String.valueOf(solve.getProcessList().size()));
     }
 
@@ -292,15 +302,19 @@ public class Process extends AppCompatActivity {
     // clicked solved
     public void solve(View view) {
 //        Toast.makeText(this, "Solved clicked", Toast.LENGTH_SHORT).show();
+        Log.d("Solve Clicked", "total rows: "+ String.valueOf(solve.getProcessList().size()));
 
         // Time Quantum check for Round Robin
-        EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
-        String tq = timeQuantumEditText.getText().toString();
-        solve.setTimeQuantum(Integer.parseInt(tq));
-
-        if(solve.getAlgorithm().equals("Round Robin") && (solve.getTimeQuantum()==-1)) {
-            Toast.makeText(this, "Enter a Time Quantum", Toast.LENGTH_SHORT).show();
-            return;
+        if(solve.getAlgorithm().equals("Round Robin")){
+            try {
+                EditText timeQuantumEditText = findViewById(R.id.timeQuantum);
+                String tq = timeQuantumEditText.getText().toString();
+                solve.setTimeQuantum(Integer.parseInt(tq));
+            }catch (Exception e){
+                Toast.makeText(this, "Enter a Time Quantum", Toast.LENGTH_SHORT).show();
+                Log.d("empty tq", "solve: ");
+                return;
+            }
         }
 
         ArrayList<String> processSequence = new ArrayList<>();
@@ -320,6 +334,43 @@ public class Process extends AppCompatActivity {
             res.append("\nCycleSequence = "+String.valueOf(cycle));
             Log.d("cycle", String.valueOf(cycle));
         }
+
+        // remove solve button
+        Button solveButton = findViewById(R.id.solve);
+        solveButton.setVisibility(View.GONE);
+        // add clear button
+        Button clearButton = findViewById(R.id.clear);
+        clearButton.setVisibility(View.VISIBLE);
+    }
+    public void clear(View view){
+        // hide table, buttons, result, spinner,
+        TableLayout table = findViewById(R.id.tableLayout);
+        table.setVisibility(View.GONE);
+
+        Button clearButton = findViewById(R.id.clear);
+        clearButton.setVisibility(View.GONE);
+
+        TextView res = findViewById(R.id.result);
+        res.setVisibility(View.GONE);
+
+        spinner.setSelection(0);
+        spinner.setClickable(false);
+        spinner.setEnabled(false);
+
+        View leftBtn = findViewById(R.id.non_preemptive);
+        View rightBtn = findViewById(R.id.preemptive);
+        leftBtn.setBackgroundResource(R.drawable.btn_left);
+        rightBtn.setBackgroundResource(R.drawable.btn_right);
+
+//        timeQuantum.setText("Time Quantum");
+//        timeQuantum.restoreDefaultFocus();
+
+        // clear data
+        solve= new Solve();
+
+        // clear table
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
+        tableLayout.removeViewsInLayout(1,tableLayout.getChildCount()-1);
     }
 
 }
