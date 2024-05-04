@@ -13,3 +13,21 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Gradle files
+build/
+gradle/
+
+# IDE specific files
+.idea/
+/.idea
+.idea/misc.xml
+
+# Local configuration files
+local.properties
+build.gradle.kts
+gradle.properties
+gradlew
+gradlew.bat
+/app/src/androidTest/
+/app/src/test/
