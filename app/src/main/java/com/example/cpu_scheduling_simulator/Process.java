@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.EditText;
@@ -38,6 +39,7 @@ public class Process extends AppCompatActivity {
     private EditText timeQuantum;
 
     private ArrayList<String> algorithms;
+    private GanttChartView ganttChartView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class Process extends AppCompatActivity {
         priority = findViewById(R.id.priority);
         spinner = findViewById(R.id.algorithm);
         timeQuantum = findViewById(R.id.timeQuantum);
+        ganttChartView = findViewById(R.id.ganttChartView);
 
         // Adding listener to "ADD PROCESS"
         Button addButton = findViewById(R.id.addProcess);
@@ -326,7 +329,7 @@ public class Process extends AppCompatActivity {
 
         // build the gantt chart
         TextView res = findViewById(R.id.result);
-        res.setVisibility(View.VISIBLE);
+//        res.setVisibility(View.VISIBLE);
         res.setText("processSequence = "+ processSequence+"\n"+"timeSequence = "+String.valueOf(timeSequence)+"\nawt= "+awt);
 
         if(solve.getAlgorithm().equals("Round Robin")){
@@ -334,6 +337,12 @@ public class Process extends AppCompatActivity {
             res.append("\nCycleSequence = "+String.valueOf(cycle));
             Log.d("cycle", String.valueOf(cycle));
         }
+
+        // display gantt chart
+        ganttChartView.setSequences(processSequence, timeSequence);
+//        ganttChartView.setVisibility(View.VISIBLE);
+        LinearLayout resultLayout = findViewById(R.id.resultLayout);
+        resultLayout.setVisibility(View.VISIBLE);
 
         // remove solve button
         Button solveButton = findViewById(R.id.solve);
@@ -350,8 +359,10 @@ public class Process extends AppCompatActivity {
         Button clearButton = findViewById(R.id.clear);
         clearButton.setVisibility(View.GONE);
 
-        TextView res = findViewById(R.id.result);
-        res.setVisibility(View.GONE);
+//        TextView res = findViewById(R.id.result);
+//        res.setVisibility(View.GONE);
+        LinearLayout resultLayout = findViewById(R.id.resultLayout);
+        resultLayout.setVisibility(View.GONE);
 
         spinner.setSelection(0);
         spinner.setClickable(false);
