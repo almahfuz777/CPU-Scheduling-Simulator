@@ -25,7 +25,7 @@ The CPU Scheduling Simulator app is designed to explore different CPU scheduling
    - Similar to non-preemptive priority scheduling, but processes can preempt the currently running process if they have a higher priority (lower number). This allows high-priority processes to be executed as soon as they arrive.
 
 # Getting Started
-1. Download the APK file from [Releases](https:github.com/almahfuz777/CPU-Scheduling-Simulator/releases) section
+1. Download the APK file from [Releases](https://github.com/almahfuz777/CPU-Scheduling-Simulator/releases) section
 2. Install it on your Android device
 
 # Screenshots
