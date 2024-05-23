@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_img"
+    android:id="@+id/main"
+    >
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EXPLORE"
+        android:textSize="32dp"
+        android:gravity="center"
+        android:textStyle="bold|italic"
+        android:textColor="@color/white"
+        android:layout_marginTop="40dp"
+        />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="350dp"
+        android:layout_height="3dp"
+        android:background="?android:attr/listDivider"
+        android:layout_below="@id/header"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="Scheduling Algorithms"
+            android:textStyle="bold"
+            android:onClick="algorithmOverview"
+            />
+        <Button
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="How to use"
+            android:textStyle="bold"
+            android:onClick="howToUse"
+            />
+        <Button
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="Future Updates"
+            android:textStyle="bold"
+            android:onClick="futureUpdates"
+            />
+        <Button
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="Contibute"
+            android:textStyle="bold"
+            android:onClick="contribute"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

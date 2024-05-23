@@ -6,4 +6,6 @@
     <color name="deep_blue">#03A9F4</color>
     <color name="disabled">#BCC3D1</color>
     <color name="grey">#808080</color>
+    <color name="hintColor">#808080</color>
+
 </resources>

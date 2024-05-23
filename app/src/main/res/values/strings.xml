@@ -4,4 +4,36 @@
     <string name="cse323">CSE323</string>
     <string name="btn">Get Started</string>
     <string name="get_started">Get Started  ➡</string>
+
+    <!--    Algorithms Overview Content-->
+    <string name="algo_1">In CPU scheduling, algorithms are used to manage the execution of processes by the CPU. These algorithms can be broadly classified into two categories: preemptive and non-preemptive.\n</string>
+    <string name="algo_2">Non-preemptive scheduling algorithms allow a process to run to completion once it has been assigned to the CPU. The CPU cannot be taken away from the process until it finishes its execution.\n</string>
+    <string name="algo_3">FCFS is the simplest scheduling algorithm. It schedules processes in the order they arrive in the ready queue. The process that arrives first gets executed first.</string>
+    <string name="algo_4">SJF schedules processes based on the length of their next CPU burst. The process with the shortest burst time is selected for execution next.</string>
+    <string name="algo_5">Each process is assigned a priority. Processes with higher priorities are executed before those with lower priorities.</string>
+    <string name="algo_6">Preemptive scheduling algorithms allow a process to be interrupted and moved to the ready queue if a higher priority process arrives. This ensures a more dynamic and responsive CPU scheduling environment.</string>
+    <string name="algo_7">Round Robin assigns a fixed time quantum to each process in the ready queue. The CPU switches between processes at regular intervals.</string>
+    <string name="algo_8">Similar to SJF, but preemptive. The process with the shortest remaining CPU burst time is executed next. If a new process arrives with a shorter burst time, it preempts the current process.</string>
+    <string name="algo_9">Like non-preemptive priority scheduling, but the CPU can be preempted if a new process arrives with a higher priority than the currently running process.\n</string>
+    <string name="algo_10">Choosing the right scheduling algorithm depends on the specific requirements of the system, such as response time, throughput, and CPU utilization. Non-preemptive algorithms are simpler and can be more predictable, while preemptive algorithms offer greater flexibility and responsiveness. Understanding the characteristics and trade-offs of each algorithm is crucial for efficient CPU scheduling.\n</string>
+
+    <!--  How To Use Content  -->
+    <string name="how_to_use_1">Welcome to the CPU Scheduling Simulator! Follow the steps below to efficiently use the simulator and visualize the scheduling of your processes:</string>
+    <string name="how_to_use_2">At the top of the screen, you will find two buttons: Non-Preemptive and Preemptive.\nClick on the appropriate button to choose the type of scheduling algorithm you want to use.</string>
+    <string name="how_to_use_3">Below the algorithm type selection, there is a dropdown menu labeled Algorithm.\nClick on the dropdown and select the specific scheduling algorithm you want to simulate. The options vary depending on whether you selected preemptive or non-preemptive in the previous step.</string>
+    <string name="how_to_use_4">If you selected the Round Robin algorithm, an additional field labeled Time Quantum will appear.\nEnter the desired time quantum in this field.</string>
+    <string name="how_to_use_5">In the \'Add a Process\' section, you will need to enter the details for each process:\nProcess ID: Enter a unique identifier for the process.\nArrival Time: Enter the time at which the process arrives in the ready queue.\nBurst Time: Enter the total CPU time required by the process.\nPriority: If you selected a priority-based algorithm, enter the priority level of the process. Higher values indicate higher priority.\nClick the \'Add Process\' button after filling in the details for each process. Repeat this step to add multiple processes.</string>
+    <string name="how_to_use_6">Once you have added all the processes, click the \'Solve\' button.\nThe simulator will process the inputs and display the Gantt Chart, which visually represents the scheduling of processes over time.\nAdditionally, a TextView will show the sequence of process executions and the average waiting time for the processes.</string>
+    <string name="how_to_use_7">\nBy following these steps, you can easily simulate various CPU scheduling algorithms and understand their behavior through visual and textual representations. Enjoy exploring different scheduling strategies with the CPU Scheduling Simulator!\n</string>
+
+    <!-- Future Updates Content -->
+    <string name="future_updates_1">This app is still under construction and we are continually working to make it better. Here are some of the exciting features and enhancements we plan to introduce in future updates:</string>
+    <string name="future_updates_2">We plan on implementing \'Hybrid Algorithm\' which will allow users to select multiple algorithms at a time and view the result.</string>
+    <string name="future_updates_3">Allow users to view results for multiple algorithms and compare their performance on the same set of processes side by side.</string>
+    <string name="future_updates_4">Intuitive Design: Create a user-friendly interface with clear labels, descriptive buttons, and smooth navigation.</string>
+    <string name="future_updates_5">Help and Tutorial: Offer a comprehensive help section or an interactive tutorial within the app to guide users through the app\'s features, explain scheduling algorithms, and provide detailed examples.</string>
+
+    <!-- Contribute Content -->
+    <string name="contribute_1">We welcome and appreciate your contributions to the CPU Scheduling Simulator! Whether you want to add new features, improve existing ones, or report bugs, your input will help make this project better for everyone. Follow the github link below to get involved.</string>
+
 </resources>

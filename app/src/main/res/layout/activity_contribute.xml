@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_img"
+    android:id="@+id/main">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="How To Contribute"
+        android:textSize="32dp"
+        android:gravity="center"
+        android:textStyle="bold|italic"
+        android:textColor="#FED8B1"
+        android:layout_marginTop="40dp"
+        />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="350dp"
+        android:layout_height="3dp"
+        android:background="?android:attr/listDivider"
+        android:layout_below="@id/header"
+        android:layout_centerHorizontal="true"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/divider">
+        <LinearLayout
+            android:id="@+id/algorithms_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:text="@string/contribute_1"
+                />
+            <Button
+                android:id="@+id/gitHubBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GitHub Repository"
+                android:background="@drawable/btn_solve"
+                android:paddingHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
